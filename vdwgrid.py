@@ -24,3 +24,7 @@ if __name__ == "__main__":
             coordinates[i,:] = [float(x)*angstrom for x in data[1:4]]
     atomic_charges = [symbol2number[element] for element in elements] 
     surface = compute_vdW_surface(atomic_charges, coordinates, args.surface_point_density, args.surface_vdW_scale)
+    with open(args.output, "w") as f:
+        f.write("{}\n".format(surface.shape[0]))
+        for point in surface:
+            f.write("{:16.10f}  {:16.10f}  {:16.10f}\n".format(*point))
