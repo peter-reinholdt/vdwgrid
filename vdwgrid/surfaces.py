@@ -17,7 +17,7 @@ def dist(x,y):
 
 
 @jit(nopython=True, cache=True)
-def compute_vdW_surface(atomic_charges, coordinates, surface_point_density=5.0, surface_vdW_scale=1.4):
+def compute_vdW_surface(atomic_charges, coordinates, density=5.0, scale=1.4):
     """
     Generates apparent uniformly spaced points on a vdw_radii
     surface of a molecule.
@@ -34,7 +34,7 @@ def compute_vdW_surface(atomic_charges, coordinates, surface_point_density=5.0, 
     points = np.zeros(natoms, dtype=np.int64)
     for i in range(natoms):
         #        area of sphere is               4*pi    *        r**2
-        points[i] = np.int(surface_point_density*4*np.pi*(surface_vdW_scale*vdw_radii[atomic_charges[i]])**2)
+        points[i] = np.int(density*4*np.pi*(scale*vdw_radii[atomic_charges[i]])**2)
     # grid = [x, y, z]
     grid = np.zeros((np.sum(points), 3), dtype=np.float64)
     idx = 0
@@ -49,9 +49,9 @@ def compute_vdW_surface(atomic_charges, coordinates, surface_point_density=5.0, 
             else:
                 #phi_k  phi_{k-1}
                 phi = ((phi + 3.6/np.sqrt(N*(1-h**2)))) % (2*np.pi)
-            x = surface_vdW_scale*vdw_radii[atomic_charges[i]]*np.cos(phi)*np.sin(theta)
-            y = surface_vdW_scale*vdw_radii[atomic_charges[i]]*np.sin(phi)*np.sin(theta)
-            z = surface_vdW_scale*vdw_radii[atomic_charges[i]]*np.cos(theta)
+            x = scale*vdw_radii[atomic_charges[i]]*np.cos(phi)*np.sin(theta)
+            y = scale*vdw_radii[atomic_charges[i]]*np.sin(phi)*np.sin(theta)
+            z = scale*vdw_radii[atomic_charges[i]]*np.cos(theta)
             grid[idx, 0] = x + coordinates[i,0]
             grid[idx, 1] = y + coordinates[i,1]
             grid[idx, 2] = z + coordinates[i,2]
@@ -66,7 +66,7 @@ def compute_vdW_surface(atomic_charges, coordinates, surface_point_density=5.0, 
     for i in range(natoms):
         for j in range(grid.shape[0]):
             r = dist(grid[j,:], coordinates[i,:])
-            if r < surface_vdW_scale*0.99*vdw_radii[atomic_charges[i]]:
+            if r < scale*0.99*vdw_radii[atomic_charges[i]]:
                 not_near_atom[j] = False
     grid = grid[not_near_atom]
 
