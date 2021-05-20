@@ -2,7 +2,7 @@
 
 import numpy as np
 from numba import jit, boolean
-from utilities import vdw_radii
+from .utilities import vdw_radii
 
 @jit('float64(float64[:], float64[:])', nopython=True, cache=True)
 def dist(x,y):
@@ -28,8 +28,6 @@ def compute_vdW_surface(atomic_charges, coordinates, surface_point_density=5.0, 
     idx         = used to keep track of index in grid, when generating 
                   initial points
     density     = points per area on a surface
-    chkrm       = (checkremove) used to keep track in index when 
-                  removing points
     """
     
     natoms = coordinates.shape[0]
