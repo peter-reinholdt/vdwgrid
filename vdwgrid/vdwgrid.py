@@ -21,8 +21,8 @@ if __name__ == "__main__":
         for i in range(n_atoms):
             data = f.readline().split()
             elements.append(data[0])
-            coordinates[i,:] = [float(x)*angstrom for x in data[1:4]]
-    atomic_charges = [symbol2number[element] for element in elements] 
+            coordinates[i,:] = np.array([float(x)*angstrom for x in data[1:4]])
+    atomic_charges = np.array([symbol2number[element] for element in elements])
     surface = compute_vdW_surface(atomic_charges, coordinates, args.surface_point_density, args.surface_vdW_scale)
     with open(args.output, "w") as f:
         f.write("{}\n".format(surface.shape[0]))

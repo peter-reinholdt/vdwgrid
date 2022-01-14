@@ -2,7 +2,7 @@
 
 import numpy as np
 from numba import jit, boolean
-from .utilities import vdw_radii
+from utilities import vdw_radii
 
 @jit('float64(float64[:], float64[:])', nopython=True, cache=True)
 def dist(x,y):
